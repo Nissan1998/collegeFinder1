@@ -28,11 +28,32 @@ async function run() {
       .db("admissionDB")
       .collection("admission");
 
+    const collegesCollection = client
+      .db("collegesDB")
+      .collection("allcolleges");
+
     app.post("/admission", async (req, res) => {
       const admitted = req.body;
       const result = await admissionCollection.insertOne(admitted);
       res.send(result);
       console.log(admitted);
+    });
+
+    app.get("/allcolleges", async (req, res) => {
+      const result = await collegesCollection.find().toArray();
+      res.send(result);
+    });
+
+    // app.get("/myadmission/:email", async (req, res) => {
+    //   const email = req.params.id;
+    //   const result = await admissionCollection.find({ email: id }).toArray();
+    //   res.send(result);
+    // });
+
+    app.get("/myadmission/:email", async (req, res) => {
+      const email = req.params.email;
+      const result = await admissionCollection.find({ email: email }).toArray();
+      res.send(result);
     });
 
     // Send a ping to confirm a successful connection
